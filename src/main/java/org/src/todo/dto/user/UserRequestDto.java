@@ -1,4 +1,4 @@
-package org.src.todo.dto;
+package org.src.todo.dto.user;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

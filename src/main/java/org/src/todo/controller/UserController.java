@@ -5,9 +5,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.src.todo.dto.UserRequestDto;
-import org.src.todo.dto.UserResponseDto;
-import org.src.todo.entity.User;
+import org.src.todo.dto.user.UserRequestDto;
+import org.src.todo.dto.user.UserResponseDto;
 import org.src.todo.service.UserService;
 
 @RestController

@@ -5,7 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.src.todo.dto.UserResponseDto;
+import org.src.todo.dto.user.UserResponseDto;
 import org.src.todo.entity.User;
 
 import java.sql.PreparedStatement;
