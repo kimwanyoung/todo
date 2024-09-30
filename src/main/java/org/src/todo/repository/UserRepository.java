@@ -34,4 +34,20 @@ public class UserRepository {
 
         return new UserResponseDto(user);
     }
+
+    public UserResponseDto findById(int userId) {
+        String sql = "SELECT user_id, name, email FROM user WHERE user_id = ?";
+
+        return jdbcTemplate.query(sql, resultSet -> {
+            if (resultSet.next()) {
+                return new UserResponseDto(
+                        resultSet.getInt("user_id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("email")
+                );
+            } else {
+                return null;
+            }
+        }, userId);
+    }
 }
