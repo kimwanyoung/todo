@@ -7,12 +7,13 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.src.todo.dto.todo.TodoRequestDto;
 import org.src.todo.dto.todo.TodoResponseDto;
-import org.src.todo.entity.Todo;
+import org.src.todo.dto.user.UserResponseDto;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -38,5 +39,31 @@ public class TodoRepository {
 
         Long id = keyHolder.getKey().longValue();
         return new TodoResponseDto(id, createdAt, updatedAt);
+    }
+
+    public List<TodoResponseDto> readAll() {
+        String sql = "SELECT todo_id, contents, created_at, updated_at, user_id FROM TODO";
+        String sql2 = "select user_id, name, email from user where user_id = ?";
+
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
+            TodoResponseDto todo = new TodoResponseDto();
+            todo.setId(resultSet.getLong("todo_id"));
+            todo.setContents(resultSet.getString("contents"));
+            todo.setCreatedAt(resultSet.getDate("created_at").toLocalDate().atStartOfDay());
+            todo.setUpdatedAt(resultSet.getDate("updated_at").toLocalDate().atStartOfDay());
+            todo.setUser(
+                    jdbcTemplate.query(sql2, resultSet2 -> {
+                        if (resultSet2.next()) {
+                            UserResponseDto user = new UserResponseDto();
+                            user.setId(resultSet2.getInt("user_id"));
+                            user.setUserName(resultSet2.getString("name"));
+                            user.setEmail(resultSet2.getString("email"));
+                            return user;
+                        } else {
+                            return null;
+                        }
+                    }, resultSet.getInt("user_id")));
+            return todo;
+        });
     }
 }

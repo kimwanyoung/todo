@@ -1,16 +1,16 @@
 package org.src.todo.dto.user;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.src.todo.entity.User;
 
 @Getter
-@RequiredArgsConstructor
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserResponseDto {
-    private final Integer id;
-    private final String userName;
-    private final String email;
+    private Integer id;
+    private String userName;
+    private String email;
 
     public UserResponseDto(User user) {
         this.id = user.getId();
