@@ -26,19 +26,18 @@ public class TodoRepository {
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        LocalDateTime createdAt = LocalDateTime.now();
-        LocalDateTime updatedAt = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, todoRequestDto.getContents());
-            ps.setTimestamp(2, Timestamp.valueOf(createdAt));
-            ps.setTimestamp(3, Timestamp.valueOf(updatedAt));
+            ps.setTimestamp(2, Timestamp.valueOf(now));
+            ps.setTimestamp(3, Timestamp.valueOf(now));
             ps.setInt(4, todoRequestDto.getUserId());
             return ps;
         }, keyHolder);
 
         Long id = keyHolder.getKey().longValue();
-        return new TodoResponseDto(id, createdAt, updatedAt);
+        return new TodoResponseDto(id, now, now);
     }
 
     public List<TodoResponseDto> readAll() {
