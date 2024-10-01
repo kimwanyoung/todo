@@ -34,4 +34,8 @@ public class TodoService {
     public List<TodoResponseDto> readAll() {
         return this.todoRepository.readAll();
     }
+
+    public TodoResponseDto findById(Long id) {
+        return this.todoRepository.findById(id);
+    }
 }

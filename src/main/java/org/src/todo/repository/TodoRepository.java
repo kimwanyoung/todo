@@ -66,4 +66,34 @@ public class TodoRepository {
             return todo;
         });
     }
+
+    public TodoResponseDto findById(Long id) {
+        String sql = "select * from todo where todo_id = ?";
+        String sql2 = "select user_id, name, email from user where user_id = ?";
+
+        return jdbcTemplate.query(sql, resultSet -> {
+            if (resultSet.next()) {
+                TodoResponseDto todo = new TodoResponseDto();
+                todo.setId(id);
+                todo.setContents(resultSet.getString("contents"));
+                todo.setCreatedAt(resultSet.getDate("created_at").toLocalDate().atStartOfDay());
+                todo.setUpdatedAt(resultSet.getDate("updated_at").toLocalDate().atStartOfDay());
+                todo.setUser(
+                        jdbcTemplate.query(sql2, resultSet2 -> {
+                            if (resultSet2.next()) {
+                                UserResponseDto user = new UserResponseDto();
+                                user.setId(resultSet2.getInt("user_id"));
+                                user.setUserName(resultSet2.getString("name"));
+                                user.setEmail(resultSet2.getString("email"));
+                                return user;
+                            } else {
+                                return null;
+                            }
+                        }, resultSet.getInt("user_id")));
+                return todo;
+            } else {
+                return null;
+            }
+        }, id);
+    }
 }

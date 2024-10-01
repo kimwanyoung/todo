@@ -25,4 +25,10 @@ public class TodoController {
         return this.todoService.readAll();
     }
 
+    @GetMapping("/{id}")
+    public TodoResponseDto findById(@PathVariable Long id) {
+        return this.todoService.findById(id);
+    }
+
+
 }
