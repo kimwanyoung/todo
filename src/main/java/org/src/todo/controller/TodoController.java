@@ -18,7 +18,6 @@ public class TodoController {
 
     @PostMapping
     public TodoResponseDto create(@RequestBody TodoRequestDto todoRequestDto) {
-        System.out.println(todoRequestDto);
         return this.todoService.create(todoRequestDto);
     }
 }
