@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.src.todo.dto.todo.TodoRequestDto;
 import org.src.todo.dto.todo.TodoResponseDto;
+import org.src.todo.dto.todo.TodoUpdateDto;
 import org.src.todo.dto.user.UserResponseDto;
 import org.src.todo.repository.TodoRepository;
 import org.src.todo.repository.UserRepository;
@@ -37,5 +38,20 @@ public class TodoService {
 
     public TodoResponseDto findById(Long id) {
         return this.todoRepository.findById(id);
+    }
+
+    public Long update(Long id, TodoUpdateDto todo) {
+
+        TodoResponseDto todoResponseDto = this.todoRepository.findById(id);
+        if(todoResponseDto != null) {
+            if(todo.getContents() != null) {
+                this.todoRepository.update(id, todo.getContents());
+            } else {
+                throw  new IllegalStateException("빈 내용은 입력할 수 없습니다.");
+            }
+
+            return id;
+        }
+        throw new IllegalStateException("존재하지 않는 게시물 입니다.");
     }
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.src.todo.dto.todo.TodoRequestDto;
 import org.src.todo.dto.todo.TodoResponseDto;
+import org.src.todo.dto.todo.TodoUpdateDto;
 import org.src.todo.service.TodoService;
 
 import java.util.List;
@@ -30,5 +31,9 @@ public class TodoController {
         return this.todoService.findById(id);
     }
 
-
+    @PatchMapping("/{id}")
+    public Long update(@PathVariable Long id, @RequestBody TodoUpdateDto todo) {
+        //TODO: 비밀번호 입력 받아서 수정 할 수 있도록 변경 필요 (유저 로그인 상태로)
+        return this.todoService.update(id, todo);
+    }
 }

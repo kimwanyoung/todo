@@ -95,4 +95,9 @@ public class TodoRepository {
             }
         }, id);
     }
+
+    public void update(Long id, String contents) {
+        String sql = "UPDATE TODO SET contents = ? WHERE todo_id = ?";
+        jdbcTemplate.update(sql, contents, id);
+    }
 }
