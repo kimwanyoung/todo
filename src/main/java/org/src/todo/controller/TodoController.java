@@ -36,4 +36,9 @@ public class TodoController {
         //TODO: 비밀번호 입력 받아서 수정 할 수 있도록 변경 필요 (유저 로그인 상태로)
         return this.todoService.update(id, todo);
     }
+
+    @DeleteMapping("/{id}")
+    public Long delete(@PathVariable Long id) {
+        return this.todoService.delete(id);
+    }
 }

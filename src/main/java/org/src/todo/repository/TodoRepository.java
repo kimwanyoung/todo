@@ -100,4 +100,9 @@ public class TodoRepository {
         String sql = "UPDATE TODO SET contents = ? WHERE todo_id = ?";
         jdbcTemplate.update(sql, contents, id);
     }
+
+    public void delete(Long id) {
+        String sql = "delete from todo where todo_id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }

@@ -54,4 +54,13 @@ public class TodoService {
         }
         throw new IllegalStateException("존재하지 않는 게시물 입니다.");
     }
+
+    public Long delete(Long id) {
+        TodoResponseDto todoResponseDto = this.todoRepository.findById(id);
+        if(todoResponseDto != null) {
+            this.todoRepository.delete(id);
+            return id;
+        }
+        throw new IllegalStateException("존재하지 않는 일정 입니다.");
+    }
 }
