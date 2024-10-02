@@ -41,8 +41,7 @@ public class TodoRepository {
     }
 
     public List<TodoResponseDto> readAll() {
-        String sql = "SELECT todo_id, contents, created_at, updated_at, user_id FROM TODO";
-        String sql2 = "select user_id, name, email from user where user_id = ?";
+        String sql = "SELECT * FROM TODO join user on todo.user_id = user.user_id";
 
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
             TodoResponseDto todo = new TodoResponseDto();
@@ -50,25 +49,18 @@ public class TodoRepository {
             todo.setContents(resultSet.getString("contents"));
             todo.setCreatedAt(resultSet.getDate("created_at").toLocalDate().atStartOfDay());
             todo.setUpdatedAt(resultSet.getDate("updated_at").toLocalDate().atStartOfDay());
-            todo.setUser(
-                    jdbcTemplate.query(sql2, resultSet2 -> {
-                        if (resultSet2.next()) {
-                            UserResponseDto user = new UserResponseDto();
-                            user.setId(resultSet2.getInt("user_id"));
-                            user.setUserName(resultSet2.getString("name"));
-                            user.setEmail(resultSet2.getString("email"));
-                            return user;
-                        } else {
-                            return null;
-                        }
-                    }, resultSet.getInt("user_id")));
+
+            UserResponseDto user = new UserResponseDto();
+            user.setId(resultSet.getInt("user.user_id"));
+            user.setUserName(resultSet.getString("name"));
+            user.setEmail(resultSet.getString("email"));
+            todo.setUser(user);
             return todo;
         });
     }
 
     public TodoResponseDto findById(Long id) {
-        String sql = "select * from todo where todo_id = ?";
-        String sql2 = "select user_id, name, email from user where user_id = ?";
+        String sql = "select * from todo join user on todo.user_id = user.user_id where todo_id = ?";
 
         return jdbcTemplate.query(sql, resultSet -> {
             if (resultSet.next()) {
@@ -77,18 +69,13 @@ public class TodoRepository {
                 todo.setContents(resultSet.getString("contents"));
                 todo.setCreatedAt(resultSet.getDate("created_at").toLocalDate().atStartOfDay());
                 todo.setUpdatedAt(resultSet.getDate("updated_at").toLocalDate().atStartOfDay());
-                todo.setUser(
-                        jdbcTemplate.query(sql2, resultSet2 -> {
-                            if (resultSet2.next()) {
-                                UserResponseDto user = new UserResponseDto();
-                                user.setId(resultSet2.getInt("user_id"));
-                                user.setUserName(resultSet2.getString("name"));
-                                user.setEmail(resultSet2.getString("email"));
-                                return user;
-                            } else {
-                                return null;
-                            }
-                        }, resultSet.getInt("user_id")));
+
+                UserResponseDto user = new UserResponseDto();
+                user.setId(resultSet.getInt("user.user_id"));
+                user.setUserName(resultSet.getString("name"));
+                user.setEmail(resultSet.getString("email"));
+                todo.setUser(user);
+
                 return todo;
             } else {
                 return null;
