@@ -6,6 +6,8 @@ import org.src.todo.dto.todo.TodoRequestDto;
 import org.src.todo.dto.todo.TodoResponseDto;
 import org.src.todo.dto.todo.TodoUpdateDto;
 import org.src.todo.dto.user.UserResponseDto;
+import org.src.todo.entity.Todo;
+import org.src.todo.entity.User;
 import org.src.todo.repository.TodoRepository;
 import org.src.todo.repository.UserRepository;
 
@@ -18,31 +20,41 @@ public class TodoService {
     private final TodoRepository todoRepository;
     private final UserRepository userRepository;
 
-    public TodoResponseDto create(TodoRequestDto todoRequestDto) {
-        int userId = todoRequestDto.getUserId();
-        UserResponseDto user = userRepository.findById(userId);
+    public Long create(TodoRequestDto todoRequestDto) {
+        Long userId = todoRequestDto.getUserId();
+        User user = userRepository.findById(userId);
 
         if(user != null) {
-            TodoResponseDto todoResponseDto = this.todoRepository.create(todoRequestDto);
-            todoResponseDto.setContents(todoRequestDto.getContents());
-            todoResponseDto.setUser(user);
-            return todoResponseDto;
+            this.todoRepository.create(todoRequestDto);
         }
 
         throw new IllegalStateException("해당하는 유저가 없습니다.");
     }
 
     public List<TodoResponseDto> readAll(int limit, int offset) {
-        return this.todoRepository.readAll(limit, offset);
+        List<Todo> todos = this.todoRepository.readAll(limit, offset);
+
+        return todos.stream()
+                .map(todo -> {
+                    TodoResponseDto todoResponseDto = new TodoResponseDto(todo);
+                    UserResponseDto userResponseDto = new UserResponseDto(todo.getUser());
+                    todoResponseDto.setUser(userResponseDto);
+                    return todoResponseDto;
+                })
+                .toList();
     }
 
     public TodoResponseDto findById(Long id) {
-        return this.todoRepository.findById(id);
+        Todo todo = this.todoRepository.findById(id);
+        TodoResponseDto todoResponseDto = new TodoResponseDto(todo);
+        UserResponseDto userResponseDto = new UserResponseDto(todo.getUser());
+        todoResponseDto.setUser(userResponseDto);
+        return todoResponseDto;
     }
 
     public Long update(Long id, TodoUpdateDto todo) {
 
-        TodoResponseDto todoResponseDto = this.todoRepository.findById(id);
+        Todo todoResponseDto = this.todoRepository.findById(id);
         if(todoResponseDto != null) {
             if(todo.getContents() != null) {
                 this.todoRepository.update(id, todo.getContents());
@@ -56,7 +68,7 @@ public class TodoService {
     }
 
     public Long delete(Long id) {
-        TodoResponseDto todoResponseDto = this.todoRepository.findById(id);
+        Todo todoResponseDto = this.todoRepository.findById(id);
         if(todoResponseDto != null) {
             this.todoRepository.delete(id);
             return id;

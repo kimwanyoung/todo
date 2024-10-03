@@ -4,10 +4,17 @@ import lombok.*;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
-    private Integer id;
-    private final String name;
-    private final String email;
-    private final String password;
+    private Long user_id;
+    private String name;
+    private String email;
+    private String password;
+
+    public User(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
 }

@@ -10,5 +10,5 @@ import org.src.todo.entity.Todo;
 @RequiredArgsConstructor
 public class TodoRequestDto {
     private final String contents;
-    private final int userId;
+    private final Long userId;
 }

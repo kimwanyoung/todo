@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.src.todo.dto.user.UserResponseDto;
+import org.src.todo.entity.Todo;
 
 import java.time.LocalDateTime;
 
@@ -19,9 +20,10 @@ public class TodoResponseDto {
     private LocalDateTime updatedAt;
     private UserResponseDto user;
 
-    public TodoResponseDto(Long id, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+    public TodoResponseDto(Todo todo) {
+        this.id = todo.getTodo_id();
+        this.contents = todo.getContents();
+        this.createdAt = todo.getCreatedAt();
+        this.updatedAt = todo.getUpdatedAt();
     }
 }

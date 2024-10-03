@@ -2,7 +2,6 @@ package org.src.todo.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -11,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class Todo {
-    private Long id;
+    private Long todo_id;
     private String contents;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

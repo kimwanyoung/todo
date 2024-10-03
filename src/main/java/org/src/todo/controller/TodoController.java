@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import org.src.todo.dto.todo.TodoRequestDto;
 import org.src.todo.dto.todo.TodoResponseDto;
 import org.src.todo.dto.todo.TodoUpdateDto;
+import org.src.todo.entity.Todo;
 import org.src.todo.service.TodoService;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class TodoController {
     private final TodoService todoService;
 
     @PostMapping
-    public TodoResponseDto create(@RequestBody TodoRequestDto todoRequestDto) {
+    public Long create(@RequestBody TodoRequestDto todoRequestDto) {
         return this.todoService.create(todoRequestDto);
     }
 

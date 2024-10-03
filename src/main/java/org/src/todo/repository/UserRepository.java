@@ -29,21 +29,22 @@ public class UserRepository {
             return preparedStatement;
         }, keyHolder);
 
-        int id = keyHolder.getKey().intValue();
-        user.setId(id);
+        Long id = keyHolder.getKey().longValue();
+        user.setUser_id(id);
 
         return new UserResponseDto(user);
     }
 
-    public UserResponseDto findById(int userId) {
-        String sql = "SELECT user_id, name, email FROM user WHERE user_id = ?";
+    public User findById(Long userId) {
+        String sql = "SELECT * FROM user WHERE user_id = ?";
 
         return jdbcTemplate.query(sql, resultSet -> {
             if (resultSet.next()) {
-                return new UserResponseDto(
-                        resultSet.getInt("user_id"),
+                return new User(
+                        resultSet.getLong("user_id"),
                         resultSet.getString("name"),
-                        resultSet.getString("email")
+                        resultSet.getString("email"),
+                        resultSet.getString("password")
                 );
             } else {
                 return null;
