@@ -22,8 +22,8 @@ public class TodoController {
     }
 
     @GetMapping
-    public List<TodoResponseDto> readAll() {
-        return this.todoService.readAll();
+    public List<TodoResponseDto> readAll(@RequestParam int limit, int offset) {
+        return this.todoService.readAll(limit, offset);
     }
 
     @GetMapping("/{id}")

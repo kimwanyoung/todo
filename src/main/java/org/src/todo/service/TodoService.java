@@ -32,8 +32,8 @@ public class TodoService {
         throw new IllegalStateException("해당하는 유저가 없습니다.");
     }
 
-    public List<TodoResponseDto> readAll() {
-        return this.todoRepository.readAll();
+    public List<TodoResponseDto> readAll(int limit, int offset) {
+        return this.todoRepository.readAll(limit, offset);
     }
 
     public TodoResponseDto findById(Long id) {

@@ -40,8 +40,8 @@ public class TodoRepository {
         return new TodoResponseDto(id, now, now);
     }
 
-    public List<TodoResponseDto> readAll() {
-        String sql = "SELECT * FROM TODO join user on todo.user_id = user.user_id";
+    public List<TodoResponseDto> readAll(int limit, int offset) {
+        String sql = "SELECT * FROM TODO join user on todo.user_id = user.user_id limit ? offset ?";
 
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
             TodoResponseDto todo = new TodoResponseDto();
@@ -56,7 +56,7 @@ public class TodoRepository {
             user.setEmail(resultSet.getString("email"));
             todo.setUser(user);
             return todo;
-        });
+        }, limit, offset);
     }
 
     public TodoResponseDto findById(Long id) {
