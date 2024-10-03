@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class TodoUpdateDto {
+    private final Long user_id;
     private final String contents;
-    private final String name;
+    private final String password;
 }

@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public class Todo {
     private Long todo_id;
     private String contents;
+    private String password;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private User user;

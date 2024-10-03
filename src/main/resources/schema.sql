@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS TODO
 (
     todo_id    INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     contents   VARCHAR(100)    NOT NULL,
+    password   VARCHAR(100)    NOT NULL,
     created_at DATETIME        NOT NULL default now(),
     updated_at DATETIME        NOT NULL default now() on update now(),
     user_id    INT,

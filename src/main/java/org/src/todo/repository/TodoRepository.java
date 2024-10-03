@@ -24,7 +24,7 @@ public class TodoRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public Long create(TodoRequestDto todoRequestDto) {
-        String sql = "INSERT INTO TODO (contents, created_at, updated_at, user_id) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO TODO (contents, password, created_at, updated_at, user_id) VALUES (?, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -32,9 +32,10 @@ public class TodoRepository {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, todoRequestDto.getContents());
-            ps.setTimestamp(2, Timestamp.valueOf(now));
+            ps.setString(2, todoRequestDto.getPassword());
             ps.setTimestamp(3, Timestamp.valueOf(now));
-            ps.setLong(4, todoRequestDto.getUserId());
+            ps.setTimestamp(4, Timestamp.valueOf(now));
+            ps.setLong(5, todoRequestDto.getUserId());
             return ps;
         }, keyHolder);
 
@@ -78,6 +79,7 @@ public class TodoRepository {
             todo.setContents(resultSet.getString("contents"));
             todo.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
             todo.setUpdatedAt(resultSet.getTimestamp("updated_at").toLocalDateTime());
+            todo.setPassword(resultSet.getString("password"));
 
             User user = new User();
             user.setUser_id(resultSet.getLong("user.user_id"));
