@@ -3,6 +3,7 @@ package org.src.todo.repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -42,16 +43,20 @@ public class TodoRepository {
     }
 
     public List<Todo> readAll(int limit, int offset) {
-        String sql = "SELECT * FROM TODO join user on todo.user_id = user.user_id limit ? offset ?";
+        try {
+            String sql = "SELECT * FROM TODO join user on todo.user_id = user.user_id limit ? offset ?";
 
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> todoMapper(resultSet), limit, offset);
+            return jdbcTemplate.query(sql, todoMapper(), limit, offset);
+        } catch (SQLException e) {
+            return null;
+        }
     }
 
     public Todo findById(Long id) {
         String sql = "select * from todo join user on todo.user_id = user.user_id where todo_id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> todoMapper(resultSet), id);
-        } catch (IncorrectResultSizeDataAccessException e) {
+            return jdbcTemplate.queryForObject(sql, todoMapper(), id);
+        } catch (SQLException e) {
             return null;
         }
     }
@@ -66,19 +71,21 @@ public class TodoRepository {
         jdbcTemplate.update(sql, id);
     }
 
-    private Todo todoMapper(ResultSet resultSet) throws SQLException {
-        Todo todo = new Todo();
-        todo.setTodo_id(resultSet.getLong("todo_id"));
-        todo.setContents(resultSet.getString("contents"));
-        todo.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
-        todo.setUpdatedAt(resultSet.getTimestamp("updated_at").toLocalDateTime());
+    private RowMapper<Todo> todoMapper() throws SQLException {
+        return (resultSet, rowNum) -> {
+            Todo todo = new Todo();
+            todo.setTodo_id(resultSet.getLong("todo_id"));
+            todo.setContents(resultSet.getString("contents"));
+            todo.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
+            todo.setUpdatedAt(resultSet.getTimestamp("updated_at").toLocalDateTime());
 
-        User user = new User();
-        user.setUser_id(resultSet.getLong("user.user_id"));
-        user.setName(resultSet.getString("name"));
-        user.setEmail(resultSet.getString("email"));
+            User user = new User();
+            user.setUser_id(resultSet.getLong("user.user_id"));
+            user.setName(resultSet.getString("name"));
+            user.setEmail(resultSet.getString("email"));
 
-        todo.setUser(user);
-        return todo;
+            todo.setUser(user);
+            return todo;
+        };
     }
 }
