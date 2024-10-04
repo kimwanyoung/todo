@@ -14,7 +14,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public UserResponseDto create(UserRequestDto userRequestDto) {
-        User user = new User(userRequestDto.getName(), userRequestDto.getEmail(), userRequestDto.getPassword());
-        return this.userRepository.create(user);
+        User createdUser = this.userRepository.create(userRequestDto);
+        return new UserResponseDto(createdUser);
     }
 }

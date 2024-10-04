@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.src.todo.dto.user.UserRequestDto;
 import org.src.todo.dto.user.UserResponseDto;
 import org.src.todo.entity.User;
 
@@ -17,22 +18,22 @@ public class UserRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public UserResponseDto create(User user) {
+    public User create(UserRequestDto userRequestDto) {
         String sql = "INSERT INTO USER(name, email, password) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, user.getEmail());
-            preparedStatement.setString(3, user.getPassword());
+            preparedStatement.setString(1, userRequestDto.getName());
+            preparedStatement.setString(2, userRequestDto.getEmail());
+            preparedStatement.setString(3, userRequestDto.getPassword());
             return preparedStatement;
         }, keyHolder);
 
         Long id = keyHolder.getKey().longValue();
-        user.setUser_id(id);
-
-        return new UserResponseDto(user);
+        User createdUser = new User(userRequestDto);
+        createdUser.setUser_id(id);
+        return createdUser;
     }
 
     public User findById(Long userId) {
