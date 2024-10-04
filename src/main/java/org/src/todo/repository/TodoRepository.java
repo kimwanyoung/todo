@@ -70,14 +70,16 @@ public class TodoRepository {
         }
     }
 
-    public void update(Long id, String contents) {
+    public Long update(Long id, String contents) {
         String sql = "UPDATE TODO SET contents = ? WHERE todo_id = ?";
         jdbcTemplate.update(sql, contents, id);
+        return id;
     }
 
-    public void delete(Long id) {
-        String sql = "delete from todo where todo_id = ?";
-        jdbcTemplate.update(sql, id);
+    public Long delete(Long id, String password) {
+        String sql = "delete from todo where todo_id = ? and password = ?";
+        jdbcTemplate.update(sql, id, password);
+        return id;
     }
 
     private RowMapper<Todo> todoMapper() throws SQLException {

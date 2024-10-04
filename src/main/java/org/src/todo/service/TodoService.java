@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.src.todo.dto.todo.TodoDeleteDto;
 import org.src.todo.dto.todo.TodoRequestDto;
 import org.src.todo.dto.todo.TodoResponseDto;
 import org.src.todo.dto.todo.TodoUpdateDto;
@@ -35,7 +36,7 @@ public class TodoService {
         throw new IllegalStateException("해당하는 유저가 없습니다.");
     }
 
-    public Page<TodoResponseDto> readAll(Pageable pageable) {
+    public Page<TodoResponseDto> findAll(Pageable pageable) {
         Page<Todo> todoPages = this.todoRepository.readAll(pageable);
 
         List<TodoResponseDto> todos = todoPages.getContent().stream()
@@ -55,24 +56,21 @@ public class TodoService {
 
     public Long update(Long id, TodoUpdateDto todoUpdateDto) {
         Todo todo = this.todoRepository.findById(id);
-        if (todo != null) {
-            if (Objects.equals(todoUpdateDto.getUser_id(), todo.getUser().getUser_id()) &&
-                    Objects.equals(todoUpdateDto.getPassword(), todo.getPassword())) {
-                this.todoRepository.update(id, todoUpdateDto.getContents());
-                return id;
-            } else {
-                throw new IllegalStateException("올바르지 않은 사용자입니다.");
-            }
+        if (todo != null && validateWriter(todo, todoUpdateDto.getPassword())) {
+            return this.todoRepository.update(id, todoUpdateDto.getContents());
         }
-        throw new IllegalStateException("존재하지 않는 게시물 입니다.");
+        throw new IllegalStateException("올바르지 않은 사용자입니다.");
     }
 
-    public Long delete(Long id) {
-        Todo todoResponseDto = this.todoRepository.findById(id);
-        if (todoResponseDto != null) {
-            this.todoRepository.delete(id);
-            return id;
+    public Long delete(Long id, TodoDeleteDto todoDeleteDto) {
+        Todo todo = this.todoRepository.findById(id);
+        if (todo != null && validateWriter(todo, todoDeleteDto.getPassword())) {
+            return this.todoRepository.delete(id, todoDeleteDto.getPassword());
         }
-        throw new IllegalStateException("존재하지 않는 일정 입니다.");
+        throw new IllegalStateException("잘못된 입력입니다.");
+    }
+
+    private boolean validateWriter(Todo todo, String password) {
+        return Objects.equals(password, todo.getPassword());
     }
 }

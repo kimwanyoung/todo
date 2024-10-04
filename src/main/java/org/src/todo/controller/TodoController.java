@@ -2,12 +2,12 @@ package org.src.todo.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.src.todo.dto.todo.TodoDeleteDto;
 import org.src.todo.dto.todo.TodoRequestDto;
 import org.src.todo.dto.todo.TodoResponseDto;
 import org.src.todo.dto.todo.TodoUpdateDto;
@@ -15,7 +15,7 @@ import org.src.todo.service.TodoService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/todo")
+@RequestMapping("/todos")
 public class TodoController {
 
     private final TodoService todoService;
@@ -27,7 +27,7 @@ public class TodoController {
 
     @GetMapping
     public HttpEntity<PagedModel<TodoResponseDto>> readAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(new PagedModel<>(this.todoService.readAll(PageRequest.of(page, size))));
+        return ResponseEntity.ok(new PagedModel<>(this.todoService.findAll(PageRequest.of(page, size))));
     }
 
     @GetMapping("/{id}")
@@ -36,12 +36,12 @@ public class TodoController {
     }
 
     @PatchMapping("/{id}")
-    public HttpEntity<Long> update(@PathVariable Long id, @RequestBody TodoUpdateDto todo) {
-        return ResponseEntity.ok(this.todoService.update(id, todo));
+    public HttpEntity<Long> update(@PathVariable Long id, @RequestBody TodoUpdateDto todoUpdateDto) {
+        return ResponseEntity.ok(this.todoService.update(id, todoUpdateDto));
     }
 
     @DeleteMapping("/{id}")
-    public HttpEntity<Long> delete(@PathVariable Long id) {
-        return ResponseEntity.ok(this.todoService.delete(id));
+    public HttpEntity<Long> delete(@PathVariable Long id, @RequestBody TodoDeleteDto todoDeleteDto) {
+        return ResponseEntity.ok(this.todoService.delete(id, todoDeleteDto));
     }
 }
