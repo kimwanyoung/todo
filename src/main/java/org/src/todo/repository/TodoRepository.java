@@ -47,7 +47,7 @@ public class TodoRepository {
         return id;
     }
 
-    public Page<Todo> readAll(Pageable pageable) {
+    public Page<Todo> findAll(Pageable pageable) {
         try {
             String sql = "SELECT * FROM TODO join user on todo.user_id = user.user_id limit ? offset ?";
             String totalCountSql = "SELECT COUNT(*) FROM TODO";

@@ -6,7 +6,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.src.todo.dto.user.UserRequestDto;
-import org.src.todo.dto.user.UserResponseDto;
 import org.src.todo.entity.User;
 
 import java.sql.PreparedStatement;
@@ -40,16 +39,11 @@ public class UserRepository {
         String sql = "SELECT * FROM user WHERE user_id = ?";
 
         return jdbcTemplate.query(sql, resultSet -> {
-            if (resultSet.next()) {
-                return new User(
-                        resultSet.getLong("user_id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("email"),
-                        resultSet.getString("password")
-                );
-            } else {
-                return null;
-            }
+            return new User(
+                    resultSet.getLong("user_id"),
+                    resultSet.getString("name"),
+                    resultSet.getString("email"),
+                    resultSet.getString("password"));
         }, userId);
     }
 }

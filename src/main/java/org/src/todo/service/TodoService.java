@@ -37,7 +37,7 @@ public class TodoService {
     }
 
     public Page<TodoResponseDto> findAll(Pageable pageable) {
-        Page<Todo> todoPages = this.todoRepository.readAll(pageable);
+        Page<Todo> todoPages = this.todoRepository.findAll(pageable);
 
         List<TodoResponseDto> todos = todoPages.getContent().stream()
                 .map(TodoResponseDto::new)
