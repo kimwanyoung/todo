@@ -1,7 +1,6 @@
 package org.src.todo.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -10,10 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.src.todo.dto.todo.TodoRequestDto;
 import org.src.todo.dto.todo.TodoResponseDto;
 import org.src.todo.dto.todo.TodoUpdateDto;
-import org.src.todo.entity.Todo;
 import org.src.todo.service.TodoService;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor

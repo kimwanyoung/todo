@@ -1,7 +1,9 @@
 package org.src.todo.entity;
 
-import lombok.*;
-import org.src.todo.dto.user.UserResponseDto;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
