@@ -1,6 +1,8 @@
 package org.src.todo.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.src.todo.dto.todo.TodoRequestDto;
 import org.src.todo.dto.todo.TodoResponseDto;
@@ -32,15 +34,14 @@ public class TodoService {
         throw new IllegalStateException("해당하는 유저가 없습니다.");
     }
 
-    public List<TodoResponseDto> readAll(int limit, int offset) {
-        List<Todo> todos = this.todoRepository.readAll(limit, offset);
+    public Page<TodoResponseDto> readAll(int pageNumber, int pageSize) {
+        Page<Todo> todoPages = this.todoRepository.readAll(pageNumber, pageSize);
 
-        return todos.stream().map(todo -> {
-            TodoResponseDto todoResponseDto = new TodoResponseDto(todo);
-            UserResponseDto userResponseDto = new UserResponseDto(todo.getUser());
-            todoResponseDto.setUser(userResponseDto);
-            return todoResponseDto;
-        }).toList();
+        List<TodoResponseDto> todos = todoPages.getContent().stream()
+                .map(TodoResponseDto::new)
+                .toList();
+
+        return new PageImpl<>(todos, todoPages.getPageable(), todoPages.getTotalPages());
     }
 
     public TodoResponseDto findById(Long id) {
@@ -52,7 +53,6 @@ public class TodoService {
     }
 
     public Long update(Long id, TodoUpdateDto todoUpdateDto) {
-
         Todo todo = this.todoRepository.findById(id);
         if (todo != null) {
             if (Objects.equals(todoUpdateDto.getUser_id(), todo.getUser().getUser_id()) &&

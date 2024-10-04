@@ -2,6 +2,11 @@ package org.src.todo.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -43,11 +48,18 @@ public class TodoRepository {
         return id;
     }
 
-    public List<Todo> readAll(int limit, int offset) {
+    public Page<Todo> readAll(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        long offset = pageable.getOffset();
+
         try {
             String sql = "SELECT * FROM TODO join user on todo.user_id = user.user_id limit ? offset ?";
+            String totalCountSql = "SELECT COUNT(*) FROM TODO";
 
-            return jdbcTemplate.query(sql, todoMapper(), limit, offset);
+            List<Todo> todos = jdbcTemplate.query(sql, todoMapper(), pageSize, offset);
+            int total = jdbcTemplate.queryForObject(totalCountSql, Integer.class);
+
+            return new PageImpl<>(todos, pageable, total);
         } catch (SQLException e) {
             return null;
         }

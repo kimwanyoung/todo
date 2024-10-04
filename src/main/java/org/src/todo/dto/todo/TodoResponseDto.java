@@ -1,9 +1,6 @@
 package org.src.todo.dto.todo;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.src.todo.dto.user.UserResponseDto;
 import org.src.todo.entity.Todo;
 
@@ -11,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class TodoResponseDto {
@@ -25,5 +23,6 @@ public class TodoResponseDto {
         this.contents = todo.getContents();
         this.createdAt = todo.getCreatedAt();
         this.updatedAt = todo.getUpdatedAt();
+        this.user = new UserResponseDto(todo.getUser());
     }
 }
