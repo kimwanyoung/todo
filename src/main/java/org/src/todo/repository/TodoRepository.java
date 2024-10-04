@@ -47,15 +47,12 @@ public class TodoRepository {
         return id;
     }
 
-    public Page<Todo> readAll(int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        long offset = pageable.getOffset();
-
+    public Page<Todo> readAll(Pageable pageable) {
         try {
             String sql = "SELECT * FROM TODO join user on todo.user_id = user.user_id limit ? offset ?";
             String totalCountSql = "SELECT COUNT(*) FROM TODO";
 
-            List<Todo> todos = jdbcTemplate.query(sql, todoMapper(), pageSize, offset);
+            List<Todo> todos = jdbcTemplate.query(sql, todoMapper(), pageable.getPageSize(), pageable.getOffset());
             int total = jdbcTemplate.queryForObject(totalCountSql, Integer.class);
 
             return new PageImpl<>(todos, pageable, total);

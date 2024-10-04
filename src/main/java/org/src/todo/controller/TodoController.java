@@ -1,6 +1,8 @@
 package org.src.todo.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -24,8 +26,8 @@ public class TodoController {
     }
 
     @GetMapping
-    public HttpEntity<PagedModel<TodoResponseDto>> readAll(@RequestParam(defaultValue = "0") int pageNumber, @RequestParam(defaultValue = "10") int pageSize) {
-        return ResponseEntity.ok(new PagedModel<>(this.todoService.readAll(pageNumber, pageSize)));
+    public HttpEntity<PagedModel<TodoResponseDto>> readAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(new PagedModel<>(this.todoService.readAll(PageRequest.of(page, size))));
     }
 
     @GetMapping("/{id}")

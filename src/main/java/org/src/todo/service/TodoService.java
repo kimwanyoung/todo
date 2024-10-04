@@ -3,6 +3,7 @@ package org.src.todo.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.src.todo.dto.todo.TodoRequestDto;
 import org.src.todo.dto.todo.TodoResponseDto;
@@ -34,8 +35,8 @@ public class TodoService {
         throw new IllegalStateException("해당하는 유저가 없습니다.");
     }
 
-    public Page<TodoResponseDto> readAll(int pageNumber, int pageSize) {
-        Page<Todo> todoPages = this.todoRepository.readAll(pageNumber, pageSize);
+    public Page<TodoResponseDto> readAll(Pageable pageable) {
+        Page<Todo> todoPages = this.todoRepository.readAll(pageable);
 
         List<TodoResponseDto> todos = todoPages.getContent().stream()
                 .map(TodoResponseDto::new)
