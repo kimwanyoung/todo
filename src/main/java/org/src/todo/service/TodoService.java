@@ -48,10 +48,7 @@ public class TodoService {
 
     public TodoResponseDto findById(Long id) {
         Todo todo = this.todoRepository.findById(id);
-        TodoResponseDto todoResponseDto = new TodoResponseDto(todo);
-        UserResponseDto userResponseDto = new UserResponseDto(todo.getUser());
-        todoResponseDto.setUser(userResponseDto);
-        return todoResponseDto;
+        return new TodoResponseDto(todo);
     }
 
     public Long update(Long id, TodoUpdateDto todoUpdateDto) {
